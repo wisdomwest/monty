@@ -34,12 +34,27 @@ typedef struct instruction_s
 	char *opcode;
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-
-void push(stack_t **top, int data);
-void pall(stack_t *top);
-void pint(stack_t *stack, int line_number);
-void pop(stack_t **stack, int line_number);
-void nop(void);
-void swap(stack_t **stack, int line_number);
-void add(stack_t **stack, int line_number);
+/**
+ * struct b_s_s - variables
+ * @arg: value
+ * @file: pointer
+ * @content: line content
+ * @lifi: flag
+ */
+typedef struct bus
+{
+	char *arg;
+	FILE *file;
+	char *content;
+	int lifi;
+}  b_t;
+extern b_t x;
+void push(stack_t **top, unsigned int data);
+void pall(stack_t **top, unsigned int counter);
+void pop(stack_t **stack, unsigned int line_number);
+void nop(stack_t **head, unsigned int counter);
+void swap(stack_t **stack, unsigned int line_number);
+void add(stack_t **stack, unsigned int line_number);
+void free_s(stack_t *head);
+int execute(char *content, stack_t **stack, unsigned int counter, FILE *file);
 #endif

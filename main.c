@@ -1,76 +1,46 @@
 #include "monty.h"
+#include <stdio.h>
+
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
 /**
   * main - main function
-  * @argc: argument counter
+  * @argc: argument count
   * @argv: arguments
   * Return: 0
-  */
-
+ */
 int main(int argc, char *argv[])
 {
-	char line[1000];
-	int line_number = 1;
-	stack_t *stack = NULL;
+	char *content;
 	FILE *file;
-	char *token = strtok(line, " $\n");
-	int value = atoi(token);
-	
+	size_t size = 0;
+	ssize_t read = 1;
+	stack_t **stack = NULL;
+	unsigned int count = 0;
+
 	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: %s file\n", argv[0]);
-		return (EXIT_FAILURE);
+		fprintf(stderr, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
 	}
-
 	file = fopen(argv[1], "r");
 	if (file == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		return (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
-	while (fgets(line, sizeof(line), file) != NULL)
+	while (read > 0)
 	{
-		while (token != NULL)
+		content = NULL;
+		read = getline(&content, &size, file);
+		count++;
+		if (read > 0)
 		{
-			if (strcmp(token, "push") == 0)
-			{
-				token = strtok(NULL, " \n\t");
-				if (token == NULL)
-				{
-					fprintf(stderr, "L%d: Missing value for push\n", line_number);
-					return (EXIT_FAILURE);
-				}
-				push(&stack, value);
-			}
-			else if (strcmp(token, "pop") == 0)
-			{
-				pop(&stack, line_number);
-			}
-			else if (strcmp(token, "add") == 0)
-			{
-				add(&stack, line_number);
-			}
-			else if (strcmp(token, "nop") == 0)
-			{
-				nop();
-			}
-			else if (strcmp(token, "swap") == 0)
-			{
-				swap(&stack, line_number);
-			}
-			else if (strcmp(token, "pall") == 0)
-			{
-				pall(stack);
-			}
-			else
-			{
-				fprintf(stderr, "L%d: unknown opcode %s\n", line_number, token);
-				return (EXIT_FAILURE);
-			}
-			token = strtok(NULL, " $\n");
+			execute(content, stack, count, file);
 		}
-		line_number++;
+		free(content);
 	}
+	free_s(*stack);
 	fclose(file);
-	return (EXIT_SUCCESS);
+	return (0);
 }
