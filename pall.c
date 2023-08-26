@@ -1,21 +1,15 @@
 #include "monty.h"
+
 /**
-  * pall - pall
-  * @stack: stack
-  * @counter: counter
-  * Return: void
-  */
-
-void pall(stack_t **stack, unsigned int counter)
+ * pall - reads a stack
+ * @stack: first argument
+ * Return:nothing
+ */
+void pall(stack_t *stack)
 {
-	 stack_t *current;
-	 (void)counter;
-
-	 current = *stack;
-
-	 while (current != NULL)
-	 {
-		 printf("%d\n", current->n);
-		 current = current->next;
-	 }
+	while (stack != NULL)
+	{
+		printf("%d\n", stack->n);
+		stack = stack->next;
+	}
 }
