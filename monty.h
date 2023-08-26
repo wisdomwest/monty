@@ -36,7 +36,8 @@ typedef struct instruction_s
 } instruction_t;
 
 // Function prototypes
-void push(stack_t** top, int data);
+int handle(FILE *file);
+void push(stack_t** top,unsigned int data);
 void pall(stack_t* top);
 void pint(stack_t *stack, int line_number);
 void pop(stack_t **stack, int line_number);
